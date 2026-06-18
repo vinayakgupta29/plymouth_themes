@@ -1,0 +1,79 @@
+
+screen_width = Window.GetWidth();
+screen_height = Window.GetHeight();
+
+frames = [];
+frame_count = 0;
+
+for (i = 0; i < 9999; i++)
+{
+    if (i < 10)
+        filename = "frame_000" + i + ".png";
+    else if (i < 100)
+        filename = "frame_00" + i + ".png";
+    else if (i < 1000)
+        filename = "frame_0" + i + ".png";
+    else
+        filename = "frame_" + i + ".png";
+
+    img = Image(filename);
+
+    if (img)
+    {
+        frames[frame_count] = img;
+        frame_count++;
+    }
+    else
+    {
+        break;
+    }
+}
+
+current = 0;
+counter = 0;
+
+sprite = Sprite(frames[0]);
+
+# Compute scale once from the first frame
+img_w = frames[0].GetWidth();
+img_h = frames[0].GetHeight();
+
+scale_x = screen_width / img_w;
+scale_y = screen_height / img_h;
+
+# Use Min() to fit entirely on screen without distortion
+scale = Math.Min(scale_x, scale_y);
+
+sprite.SetXScale(scale);
+sprite.SetYScale(scale);
+
+# Center the image
+sprite.SetX((screen_width - img_w * scale) / 2);
+sprite.SetY((screen_height - img_h * scale) / 2);
+
+fun refresh_callback ()
+{
+    counter++;
+
+    if (counter >= 8)
+    {
+        counter = 0;
+
+        current++;
+
+        if (current >= frame_count)
+            current = 0;
+
+        sprite.SetImage(frames[current]);
+
+        # Reapply scaling (not strictly necessary if all frames
+        # are the same size, but harmless)
+        sprite.SetXScale(scale);
+        sprite.SetYScale(scale);
+
+        sprite.SetX((screen_width - img_w * scale) / 2);
+        sprite.SetY((screen_height - img_h * scale) / 2);
+    }
+}
+
+Plymouth.SetRefreshFunction(refresh_callback);

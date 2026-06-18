@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=MyGIF
+Description=Animated GIF Splash
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/frames_09
+ScriptFile=/usr/share/plymouth/themes/frames_09/frames_09.script
